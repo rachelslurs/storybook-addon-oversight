@@ -1,0 +1,22 @@
+export { detectRepoRoot, normalizeManifest } from './normalize';
+export { lint } from './lint';
+export type { LintOptions } from './lint';
+export { parsePathTargetId, pathLinkPattern } from './pathLinks';
+export { analyzeManifest, buildReport, resolveComponent } from './report';
+export type { ComponentReport, ManifestAnalysis } from './report';
+export type {
+  Diagnostic,
+  DiagnosticRule,
+  DiagnosticSeverity,
+  ExtractionFailure,
+  NormalizeResult,
+  NormalizedComponent,
+  RawDeclaration,
+  RawEntry,
+  RawManifest,
+  RawPayload,
+  RawProp,
+  RawStory,
+  RuleSetting,
+  StoryFailure,
+} from './types';
