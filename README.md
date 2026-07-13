@@ -1,262 +1,205 @@
-<!-- README START -->
+# storybook-addon-oversight
 
-# Storybook Addon Kit ([demo](https://main--601ada52c3d4040021afdc30.chromatic.com))
+A Storybook addon that lints your components manifest for the **documentation
+the MCP actually consumes** — per component, while you work. It surfaces docgen
+extraction health and component/prop/story documentation coverage, with a count
+badge on the panel tab.
 
-Simplify the creation of Storybook addons
+Scope is deliberate: the manifest's descriptions and prop docs are what
+Storybook's MCP `get-documentation` returns to agents, so those are what this
+lints. It does **not** invent custom tags — selection guidance ("use X instead")
+lives as a plain redirect sentence in the component description, which is both
+typical Storybook practice and MCP-visible.
 
-- 📝 Live-editing in development
-- ⚛️ React/JSX support
-- 📦 Transpiling and bundling with [tsup](https://tsup.egoist.dev/)
-- 🏷 Plugin metadata
-- 🚢 Release management with [Auto](https://github.com/intuit/auto)
-- 🧺 Boilerplate and sample code
-- 🛄 ESM support
-- 🛂 TypeScript by default with option to eject to JS
+## Requirements
 
-### Migrating to a later Storybook version
+- **Storybook ^10.3** (React projects).
+- The **components-manifest** feature enabled and served in dev.
+  [`@storybook/addon-mcp`](https://www.npmjs.com/package/@storybook/addon-mcp)
+  turns it on and serves `/manifests/components.json` — the manifest Oversight
+  lints. Without it, the panel degrades to an "unavailable" state.
 
-If you have an existing addon that you want to migrate to support the latest version of Storyboook, you can check out the [addon migration guide](https://storybook.js.org/docs/addons/addon-migration-guide).
+## Install
 
-## Getting Started
-
-Click the **Use this template** button to get started.
-
-![](https://user-images.githubusercontent.com/321738/125058439-8d9ef880-e0aa-11eb-9211-e6d7be812959.gif)
-
-Clone your repository and install dependencies.
-
-```sh
-npm install
+```bash
+npm install --save-dev storybook-addon-oversight
+# or: pnpm add -D storybook-addon-oversight
 ```
 
-<!-- README END -->
-
-### Development scripts
-
-- `npm run start` runs babel in watch mode and starts Storybook
-- `npm run build` build and package your addon code
-
-### Switch from TypeScript to JavaScript
-
-Don't want to use TypeScript? We offer a handy eject command: `npm run eject-ts`
-
-This will convert all code to JS. It is a destructive process, so we recommended running this before you start writing any code.
-
-## What's included?
-
-![Demo](https://user-images.githubusercontent.com/42671/107857205-e7044380-6dfa-11eb-8718-ad02e3ba1a3f.gif)
-
-The addon code lives in `src`. It demonstrates all core addon related concepts. The three [UI paradigms](https://storybook.js.org/docs/react/addons/addon-types#ui-based-addons)
-
-- `src/Tool.tsx`
-- `src/Panel.tsx`
-- `src/Tab.tsx`
-
-Which, along with the addon itself, are registered in `src/manager.ts`.
-
-Managing State and interacting with a story:
-
-- `src/withGlobals.ts` & `src/Tool.tsx` demonstrates how to use `useGlobals` to manage global state and modify the contents of a Story.
-- `src/withRoundTrip.ts` & `src/Panel.tsx` demonstrates two-way communication using channels.
-- `src/Tab.tsx` demonstrates how to use `useParameter` to access the current story's parameters.
-
-Your addon might use one or more of these patterns. Feel free to delete unused code. Update `src/manager.ts` and `src/preview.ts` accordingly.
-
-Lastly, configure you addon name in `src/constants.ts`.
-
-### Bundling
-
-Addons can interact with a Storybook project in multiple ways. It is recommended to familiarize yourself with [the basics](https://storybook.js.org/docs/react/addons/introduction) before getting started.
-
-- Manager entries are used to add UI or behavior to the Storybook manager UI.
-- Preview entries are used to add UI or behavior to the preview iframe where stories are rendered.
-- Presets are used to modify the Storybook configuration, similar to how [users can configure their `main.ts` configurations](https://storybook.js.org/docs/react/api/main-config).
-
-Since each of these places represents a different environment with different features and modules, it is also recommended to split and build your modules accordingly. This addon-kit comes with a preconfigured [bundling configuration](./tsup.config.ts) that supports this split, and you are free to modify and extend it as needed.
-
-You can define which modules match which environments in the [`package.json#bundler`](./package.json) property:
-
-- `exportEntries` is a list of module entries that users can manually import from anywhere they need to. For example, you could have decorators that users need to import into their `preview.ts` file or utility functions that can be used in their `main.ts` files.
-- `managerEntries` is a list of module entries meant only for the manager UI. These modules will be bundled to ESM and won't include types since they are mostly loaded by Storybook directly.
-- `previewEntries` is a list of module entries meant only for the preview UI. These modules will be bundled to ESM and won't include types since they are mostly loaded by Storybook directly.
-
-Manager and preview entries are only used in the browser so they only output ESM modules. Export entries could be used both in the browser and in Node depending on their use case, so they both output ESM and CJS modules.
-
-#### Globalized packages
-
-Storybook provides a predefined set of packages that are available in the manager UI and the preview UI. In the final bundle of your addon, these packages should not be included. Instead, the imports should stay in place, allowing Storybook to replace those imports with the actual packages during the Storybook build process.
-
-The list of packages differs between the manager and the preview, which is why there is a slight difference between `managerEntries` and `previewEntries`. Most notably, `react` and `react-dom` are prebundled in the manager but not in the preview. This means that your manager entries can use React to build UI without bundling it or having a direct reference to it. Therefore, it is safe to have React as a `devDependency` even though you are using it in production. _Requiring React as a peer dependency would unnecessarily force your users to install React._
-
-An exception to this rule is if you are using React to inject UI into the preview, which does not come prebundled with React. In such cases, you need to move `react` and `react-dom` to a peer dependency. However, we generally advise against this pattern since it would limit the usage of your addon to React-based Storybooks.
-
-### Metadata
-
-Storybook addons are listed in the [catalog](https://storybook.js.org/addons) and distributed via npm. The catalog is populated by querying npm's registry for Storybook-specific metadata in `package.json`. This project has been configured with sample data. Learn more about available options in the [Addon metadata docs](https://storybook.js.org/docs/react/addons/addon-catalog#addon-metadata).
-
-## Documentation
-
-To help the community use your addon and understand its capabilities, please document it thoroughly.
-
-To get started, replace this README with the content in this sample template.
-
-### Sample documentation template
-
-````md
-# My Addon
-
-## Installation
-
-First, install the package.
-
-```sh
-npm install --save-dev my-addon
-```
-
-Then, register it as an addon in `.storybook/main.js`.
+Register it in `.storybook/main.ts` (alongside `@storybook/addon-mcp`):
 
 ```ts
-// .storybook/main.ts
-
-// Replace your-framework with the framework you are using (e.g., react-webpack5, vue3-vite)
-import type { StorybookConfig } from '@storybook/your-framework';
-
-const config: StorybookConfig = {
-  // ...rest of config
-  addons: [
-    '@storybook/addon-docs'
-    'my-addon', // 👈 register the addon here
-  ],
+const config = {
+  addons: ['@storybook/addon-mcp', 'storybook-addon-oversight'],
 };
-
 export default config;
 ```
 
-## Usage
-
-The primary way to use this addon is to define the `exampleParameter` parameter. You can do this the
-component level, as below, to affect all stories in the file, or you can do it for a single story.
+Oversight's default `expectedExtractor` is `react-docgen-typescript`. Pin the
+same extractor so JSDoc on components and props is actually extracted:
 
 ```ts
-// Button.stories.ts
+// .storybook/main.ts
+const config = {
+  typescript: { reactDocgen: 'react-docgen-typescript' },
+};
+```
 
-// Replace your-framework with the name of your framework
-import type { Meta } from '@storybook/your-framework';
+## Surfaces
 
-import { Button } from './Button';
+The same diagnostics appear in two places, independently:
 
-const meta: Meta<typeof Button> = {
-  component: Button,
-  parameters: {
-    myAddon: {
-      exampleParameter: true,
-      // See API section below for available parameters
+- **Manager panel** — an "Oversight" tab in the addons drawer, shown on every
+  component's **story** view (Storybook hides addon panels on Docs pages).
+  Registering the addon in `.storybook/main.ts` enables it.
+- **Docs-page block** — the coverage rendered inline on Docs pages. Two ways to
+  enable it, both from `storybook-addon-oversight/blocks`:
+
+  **Global (every Docs page), one line in `.storybook/preview.ts`:**
+
+  ```ts
+  import { OversightDocsContainer } from 'storybook-addon-oversight/blocks';
+
+  const preview = {
+    parameters: { docs: { container: OversightDocsContainer } },
+  };
+  export default preview;
+  ```
+
+  Delete that line to remove it from every page. Unattached MDX pages (an
+  overview with no `of`) get the plain container — no block.
+
+  **Per page**, place the block in an individual component's MDX instead:
+
+  ```mdx
+  import { Oversight } from 'storybook-addon-oversight/blocks';
+
+  <Oversight />
+  ```
+
+Either way, the Docs block needs the components-manifest feature enabled — same
+prerequisite as the panel.
+
+## Diagnostics
+
+| Rule                            | Default severity | Fires when                                                                                     |
+| ------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------- |
+| `docgen-missing`                | error            | an entry has no docgen payload (extraction failed)                                             |
+| `story-extraction-error`        | warning          | a story's snippet/docgen extraction failed (`stories[].error`)                                 |
+| `extractor-drift`               | warning          | `meta.docgen` ≠ the expected extractor                                                         |
+| `component-description-missing` | warning          | no component description                                                                       |
+| `prop-descriptions-missing`     | warning          | props without JSDoc descriptions                                                               |
+| `required-prop-undocumented`    | error            | required props without JSDoc descriptions                                                      |
+| `docs-link-dangling`            | error            | a prose `?path=/docs\|story/…` link targets an id whose component prefix isn't in the manifest |
+| `unknown-ignore-rule`           | warning          | `@oversightIgnore` lists a token that is not a rule name                                       |
+| `deprecated-tag`                | info             | a `@deprecated` tag is present                                                                 |
+
+## Authoring MCP-legible docs
+
+Everything Oversight lints is standard Storybook practice — no addon-specific
+tags. Put a JSDoc block above the component (and on each prop), and where two
+components are confusable, end the description with a redirect the MCP passes
+through verbatim:
+
+```ts
+/**
+ * A committed-selection box: tick one or more items and submit them together,
+ * rather than applying each change the moment it flips.
+ * For a setting that applies the moment it flips, use
+ * [Toggle](?path=/docs/forms-toggle--docs) instead.
+ */
+```
+
+The `[Toggle](?path=…)` link is validated by `docs-link-dangling` and is made
+clickable in the panel.
+
+### Exempting a component
+
+`@oversightIgnore` keeps a component in the manifest (agents still see its docs)
+but exempts it from lint rules — bare for all rules, or scoped:
+
+```ts
+/**
+ * An internal token catalog; coverage rules don't apply.
+ *
+ * @oversightIgnore docgen-missing, story-extraction-error
+ */
+```
+
+This is deliberately different from Storybook's `!manifest` tag, which removes
+the component from the manifest — and therefore from agents — entirely. Use
+`!manifest` to hide, `@oversightIgnore` to exempt.
+
+Unrecognized rule names in the list are themselves flagged
+(`unknown-ignore-rule`) rather than silently exempting nothing. For an entry
+whose docgen extraction failed (no component JSDoc reaches the manifest), put
+`@oversightIgnore` on the JSDoc above the stories file's `meta` — the one case
+where story-meta JSDoc is sanctioned.
+
+## Configuration
+
+Addon options don't reach the manager bundle, so configuration goes through
+`.storybook/manager.ts`:
+
+```ts
+import { addons } from 'storybook/manager-api';
+
+addons.setConfig({
+  'storybook-addon-oversight': {
+    expectedExtractor: 'react-docgen-typescript',
+    debuggerLink: false, // hide the manifest-debugger link
+    rules: {
+      'deprecated-tag': 'off', // disable a rule
+      'prop-descriptions-missing': 'error', // or remap its severity
     },
   },
-};
-
-export default meta;
+});
 ```
 
-Another way to use the addon is...
+Valid `rules` values are `"off"`, `"error"`, `"warning"`, `"info"`; anything
+else is ignored and the rule keeps its default severity.
 
-## API
+`debuggerLink` toggles the **"manifest debugger" footer link** (defaults to
+`true`). The `rules`, `expectedExtractor`, and `debuggerLink` options are read
+from a different channel on each surface:
 
-### Parameters
+- **Panel** — the global `addons.setConfig` value above.
+- **Docs block** — `parameters.oversight` on the **component's own stories
+  meta**, per component (the block reads the component meta's parameters
+  directly, not merged `.storybook/preview.ts` parameters):
 
-This addon contributes the following parameters to Storybook, under the `myAddon` namespace:
+  ```ts
+  // a component's stories/MDX meta — hides the link on that component's Docs block
+  const meta = { title: 'Forms/Checkbox', parameters: { oversight: { debuggerLink: false } } };
+  ```
 
-#### `disable`
+## Try it
 
-Type: `boolean`
-
-Disable this addon's behavior. This parameter is most useful to allow overriding at more specific
-levels. For example, if this parameter is set to true at the project level, it could then be
-re-enabled by setting it to false at the meta (component) or story level.
-
-### Options
-
-When registering this addon, you can configure it with the following options, which are passed when
-registering the addon, like so:
-
-```ts
-// .storybook/main.ts
-
-// Replace your-framework with the framework you are using (e.g., react-webpack5, vue3-vite)
-import type { StorybookConfig } from '@storybook/your-framework';
-
-const config: StorybookConfig = {
-  // ...rest of config
-  addons: [
-    '@storybook/addon-docs',
-    {
-      name: 'my-addon',
-      options: {
-        // 👈 options for my-addon go here
-      },
-    },
-  ],
-};
-
-export default config;
-```
-
-#### `useExperimentalBehavior`
-
-Type: `boolean`
-
-Enable experimental behavior to...
-````
-
-## Release Management
-
-### Setup
-
-This project is configured to use [auto](https://github.com/intuit/auto) for release management. It generates a changelog and pushes it to both GitHub and npm. Therefore, you need to configure access to both:
-
-- [`NPM_TOKEN`](https://docs.npmjs.com/creating-and-viewing-access-tokens#creating-access-tokens) Create a token with both _Read and Publish_ permissions.
-- [`GH_TOKEN`](https://github.com/settings/tokens) Create a token with the `repo` scope.
-
-Then open your `package.json` and edit the following fields:
-
-- `name`
-- `author`
-- `repository`
-
-#### Local
-
-To use `auto` locally create a `.env` file at the root of your project and add your tokens to it:
+This repo ships a demo Storybook that dogfoods the addon — a handful of
+components each engineered to trip one rule:
 
 ```bash
-GH_TOKEN=<value you just got from GitHub>
-NPM_TOKEN=<value you just got from npm>
+pnpm install
+pnpm build      # bundle the addon to dist/ (Storybook loads the built output)
+pnpm storybook  # open the demo at http://localhost:6006
+# or `pnpm start` to rebuild the addon on change while Storybook runs
 ```
 
-Lastly, **create labels on GitHub**. You’ll use these labels in the future when making changes to the package.
+Open any component's story to see the Oversight panel, or its Docs page to see
+the inline coverage block.
+
+## Development
 
 ```bash
-npx auto create-labels
+pnpm build   # tsc typecheck + tsup bundle → dist/
+pnpm test    # core unit tests (vitest)
+pnpm lint
 ```
 
-If you check on GitHub, you’ll now see a set of labels that `auto` would like you to use. Use these to tag future pull requests.
+Diagnostic logic lives as pure functions in `src/core/` with zero Storybook
+imports (plain data in, plain data out); the panel and Docs block are thin
+renderers over it.
 
-#### GitHub Actions
+## License
 
-This template comes with GitHub actions already set up to publish your addon anytime someone pushes to your repository.
-
-Go to `Settings > Secrets`, click `New repository secret`, and add your `NPM_TOKEN`.
-
-### Creating a release
-
-To create a release locally you can run the following command, otherwise the GitHub action will make the release for you.
-
-```sh
-npm run release
-```
-
-That will:
-
-- Build and package the addon code
-- Bump the version
-- Push a release to GitHub and npm
-- Push a changelog to GitHub
+MIT
