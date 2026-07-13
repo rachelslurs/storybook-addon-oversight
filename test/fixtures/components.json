@@ -1,0 +1,212 @@
+{
+  "v": 0,
+  "components": {
+    "actions-button": {
+      "id": "actions-button",
+      "name": "Button",
+      "path": "./src/Button/Button.stories.tsx",
+      "jsDocTags": {},
+      "description": "Triggers an action when pressed — submitting a form, opening a dialog, or running a command. For grouping related content in a container, see [Card](?path=/docs/data-display-card--docs).",
+      "reactDocgenTypescript": {
+        "tags": {},
+        "filePath": "storybook/src/Button/Button.tsx",
+        "description": "Triggers an action when pressed — submitting a form, opening a dialog, or running a command. For grouping related content in a container, see [Card](?path=/docs/data-display-card--docs).",
+        "displayName": "Button",
+        "methods": [],
+        "props": {
+          "variant": {
+            "defaultValue": null,
+            "description": "Visual style — 'primary' for the main action, 'secondary' for supporting ones.",
+            "name": "variant",
+            "declarations": [{ "fileName": "storybook/src/Button/Button.tsx", "name": "TypeLiteral" }],
+            "required": true,
+            "type": { "name": "'primary' | 'secondary'" }
+          },
+          "size": {
+            "defaultValue": null,
+            "description": "Control height and padding — 'sm', 'md', or 'lg'. Defaults to 'md'.",
+            "name": "size",
+            "declarations": [{ "fileName": "storybook/src/Button/Button.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "'sm' | 'md' | 'lg'" }
+          },
+          "onClick": {
+            "defaultValue": null,
+            "description": "Fires when the button is activated by click, tap, or keyboard.",
+            "name": "onClick",
+            "declarations": [{ "fileName": "storybook/src/Button/Button.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "() => void" }
+          }
+        },
+        "exportName": "default"
+      },
+      "stories": [
+        {
+          "id": "actions-button--primary",
+          "name": "Primary",
+          "snippet": "const Primary = () => <Button variant=\"primary\">Save</Button>;"
+        }
+      ],
+      "import": "import { Button } from \"my-design-system\";"
+    },
+    "data-display-card": {
+      "id": "data-display-card",
+      "name": "Card",
+      "path": "./src/Card/Card.stories.tsx",
+      "jsDocTags": {},
+      "description": "A surface that groups related content and actions on a single subject, with optional elevation to lift it above the page.",
+      "reactDocgenTypescript": {
+        "tags": {},
+        "filePath": "storybook/src/Card/Card.tsx",
+        "description": "A surface that groups related content and actions on a single subject, with optional elevation to lift it above the page.",
+        "displayName": "Card",
+        "methods": [],
+        "props": {
+          "elevated": {
+            "defaultValue": null,
+            "description": "Raise the card with a drop shadow to separate it from the page.",
+            "name": "elevated",
+            "declarations": [{ "fileName": "storybook/src/Card/Card.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "boolean" }
+          },
+          "children": {
+            "defaultValue": null,
+            "description": "Content rendered inside the card body.",
+            "name": "children",
+            "declarations": [{ "fileName": "storybook/src/Card/Card.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "ReactNode" }
+          }
+        },
+        "exportName": "default"
+      },
+      "stories": [
+        {
+          "id": "data-display-card--default",
+          "name": "Default",
+          "snippet": "const Default = () => <Card>Card body</Card>;"
+        }
+      ],
+      "import": "import { Card } from \"my-design-system\";"
+    },
+    "forms-textfield": {
+      "id": "forms-textfield",
+      "name": "TextField",
+      "path": "./src/TextField/TextField.stories.tsx",
+      "jsDocTags": {},
+      "description": "A single-line text input with an associated label. Use it for short freeform values such as names, emails, or search terms.",
+      "reactDocgenTypescript": {
+        "tags": {},
+        "filePath": "storybook/src/TextField/TextField.tsx",
+        "description": "A single-line text input with an associated label. Use it for short freeform values such as names, emails, or search terms.",
+        "displayName": "TextField",
+        "methods": [],
+        "props": {
+          "label": {
+            "defaultValue": null,
+            "description": "Visible label and accessible name for the input.",
+            "name": "label",
+            "declarations": [{ "fileName": "storybook/src/TextField/TextField.tsx", "name": "TypeLiteral" }],
+            "required": true,
+            "type": { "name": "string" }
+          },
+          "value": {
+            "defaultValue": null,
+            "description": "Current value (controlled).",
+            "name": "value",
+            "declarations": [{ "fileName": "storybook/src/TextField/TextField.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "string" }
+          },
+          "onChange": {
+            "defaultValue": null,
+            "description": "Fires with the new value on each edit.",
+            "name": "onChange",
+            "declarations": [{ "fileName": "storybook/src/TextField/TextField.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "(value: string) => void" }
+          }
+        },
+        "exportName": "default"
+      },
+      "stories": [
+        {
+          "id": "forms-textfield--default",
+          "name": "Default",
+          "snippet": "const Default = () => <TextField label=\"Name\" />;"
+        }
+      ],
+      "import": "import { TextField } from \"my-design-system\";"
+    },
+    "layout-stack": {
+      "id": "layout-stack",
+      "name": "Stack",
+      "path": "./src/Stack/Stack.stories.tsx",
+      "jsDocTags": {},
+      "description": "A layout primitive that arranges its children in a single row or column with consistent spacing.",
+      "reactDocgenTypescript": {
+        "tags": {},
+        "filePath": "storybook/src/Stack/Stack.tsx",
+        "description": "A layout primitive that arranges its children in a single row or column with consistent spacing.",
+        "displayName": "Stack",
+        "methods": [],
+        "props": {
+          "direction": {
+            "defaultValue": null,
+            "description": "Main axis — 'row' or 'column'. Defaults to 'column'.",
+            "name": "direction",
+            "declarations": [{ "fileName": "storybook/src/Stack/Stack.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "'row' | 'column'" }
+          },
+          "gap": {
+            "defaultValue": null,
+            "description": "Space between children, in spacing units.",
+            "name": "gap",
+            "declarations": [{ "fileName": "storybook/src/Stack/Stack.tsx", "name": "TypeLiteral" }],
+            "required": false,
+            "type": { "name": "number" }
+          }
+        },
+        "exportName": "default"
+      },
+      "stories": [
+        {
+          "id": "layout-stack--row",
+          "name": "Row",
+          "snippet": "const Row = () => <Stack direction=\"row\" gap={2} />;"
+        }
+      ],
+      "import": "import { Stack } from \"my-design-system\";"
+    },
+    "feedback-spinner": {
+      "id": "feedback-spinner",
+      "name": "Spinner",
+      "path": "./src/Spinner/Spinner.stories.tsx",
+      "jsDocTags": {},
+      "description": "An indeterminate progress indicator shown while content loads.",
+      "reactDocgenTypescript": {
+        "tags": {},
+        "filePath": "storybook/src/Spinner/Spinner.tsx",
+        "description": "An indeterminate progress indicator shown while content loads.",
+        "displayName": "Spinner",
+        "methods": [],
+        "props": {},
+        "exportName": "default"
+      },
+      "stories": [
+        {
+          "id": "feedback-spinner--default",
+          "name": "Default",
+          "snippet": "const Default = () => <Spinner />;"
+        }
+      ],
+      "import": "import { Spinner } from \"my-design-system\";"
+    }
+  },
+  "meta": {
+    "docgen": "react-docgen-typescript"
+  }
+}
