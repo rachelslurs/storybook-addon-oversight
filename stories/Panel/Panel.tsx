@@ -9,11 +9,11 @@ export interface PanelProps {
 }
 
 /**
- * An internal scaffolding surface. Its prop coverage is intentionally exempted,
- * and the exemption list also names a rule that doesn't exist — which Oversight
- * flags (unknown-ignore-rule) rather than silently ignoring.
+ * An internal scaffolding surface. Its `slot` prop is intentionally undocumented,
+ * so `@oversightIgnore` exempts this component from the prop-coverage rule: a
+ * deliberate opt-out, not an oversight.
  *
- * @oversightIgnore prop-descriptions-missing frobnicate
+ * @oversightIgnore prop-descriptions-missing
  */
 export function Panel({ children }: PanelProps) {
   return <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">{children}</div>;
