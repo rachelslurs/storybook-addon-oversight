@@ -1,3 +1,34 @@
+# v0.1.0 (Tue Jul 14 2026)
+
+#### 🚀 Enhancement
+
+- chore: update binary assets for findings and oversight panel [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- fix(a11y): make severity colors WCAG AA and lighten the panel [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- docs: restructure README opening and add an animated hero [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- docs: apply writing-style edits to README and Overview [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- docs(demo): add a Findings-section crop to the Overview [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- docs(demo): make Panel a valid @oversightIgnore example, drop unknown-ignore-rule [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- feat: surface findings as named lint rules in the panel and docs block [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+- docs: scope the "authoring" section to authoring, not all linting [#6](https://github.com/rachelslurs/storybook-addon-oversight/pull/6) ([@rachelslurs](https://github.com/rachelslurs))
+
+#### 🐛 Bug Fix
+
+- fix: center the Overview icon [#5](https://github.com/rachelslurs/storybook-addon-oversight/pull/5) ([@rachelslurs](https://github.com/rachelslurs))
+- docs: expand the demo Overview (screenshots + icon + light theme) [#4](https://github.com/rachelslurs/storybook-addon-oversight/pull/4) ([@rachelslurs](https://github.com/rachelslurs))
+- style: polish the demo components with Tailwind [#3](https://github.com/rachelslurs/storybook-addon-oversight/pull/3) ([@rachelslurs](https://github.com/rachelslurs))
+- ci: host the demo Storybook on GitHub Pages [#2](https://github.com/rachelslurs/storybook-addon-oversight/pull/2) ([@rachelslurs](https://github.com/rachelslurs))
+- ci: PR-based, label-driven release workflow [#1](https://github.com/rachelslurs/storybook-addon-oversight/pull/1) ([@rachelslurs](https://github.com/rachelslurs))
+
+#### ⚠️ Pushed to `main`
+
+- docs: remove em-dashes from the Overview and README ([@rachelslurs](https://github.com/rachelslurs))
+
+#### Authors: 1
+
+- rachel cantor ([@rachelslurs](https://github.com/rachelslurs))
+
+---
+
 # v0.0.1 (Mon Jul 13 2026)
 
 #### ⚠️ Pushed to `main`
