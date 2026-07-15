@@ -1,3 +1,23 @@
+# v0.1.1 (Wed Jul 15 2026)
+
+#### 🐛 Bug Fix
+
+- fix: build manager with classic JSX runtime to avoid dual-React crash [#8](https://github.com/rachelslurs/storybook-addon-oversight/pull/8) ([@rachelslurs](https://github.com/rachelslurs))
+- chore: regenerate block and drift screenshots for the a11y update [#7](https://github.com/rachelslurs/storybook-addon-oversight/pull/7) ([@rachelslurs](https://github.com/rachelslurs))
+
+#### ⚠️ Pushed to `main`
+
+- docs: add blog post link to README for additional context ([@rachelslurs](https://github.com/rachelslurs))
+- ci: use GH_TOKEN so Auto can push past the main ruleset ([@rachelslurs](https://github.com/rachelslurs))
+- ci: add CODEOWNERS so rulesets can require my review ([@rachelslurs](https://github.com/rachelslurs))
+- ci: give Auto a GitHub-linked author for release commits ([@rachelslurs](https://github.com/rachelslurs))
+
+#### Authors: 1
+
+- rachel cantor ([@rachelslurs](https://github.com/rachelslurs))
+
+---
+
 # v0.1.0 (Tue Jul 14 2026)
 
 #### 🚀 Enhancement
