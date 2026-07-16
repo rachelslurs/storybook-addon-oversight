@@ -1,3 +1,22 @@
+# v0.1.3 (Thu Jul 16 2026)
+
+#### 🐛 Bug Fix
+
+- docs: note experimentalDocgenServer is not yet supported [#15](https://github.com/rachelslurs/storybook-addon-oversight/pull/15) ([@rachelslurs](https://github.com/rachelslurs))
+
+#### ⚠️ Pushed to `main`
+
+- test: add a happy-dom harness and ReportView render tests ([@rachelslurs](https://github.com/rachelslurs))
+- test: characterize that normalize throws on the ref-based index ([@rachelslurs](https://github.com/rachelslurs))
+- style: left-align the status messages and drop em dashes ([@rachelslurs](https://github.com/rachelslurs))
+- fix: state the real cause when the components manifest is unavailable ([@rachelslurs](https://github.com/rachelslurs))
+
+#### Authors: 1
+
+- rachel cantor ([@rachelslurs](https://github.com/rachelslurs))
+
+---
+
 # v0.1.2 (Thu Jul 16 2026)
 
 #### 🐛 Bug Fix
