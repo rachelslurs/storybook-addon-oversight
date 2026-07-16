@@ -3,7 +3,7 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { DocsContainer, useOf } from '@storybook/addon-docs/blocks';
 import type { DocsContainerProps } from '@storybook/addon-docs/blocks';
 import { ThemeProvider, ensure, styled, themes, useTheme } from 'storybook/theming';
-import { buildReport } from './core';
+import { buildReport, describeManifestUnavailable } from './core';
 import type { RawManifest } from './core';
 import { DEFAULT_DEBUGGER_LINK } from './config';
 import type { OversightConfig } from './config';
@@ -43,12 +43,21 @@ function manifestUrl(name: string): string {
 // retries instead of being wedged in the `unavailable` state for the session.
 let manifestPromise: Promise<RawManifest | null> | undefined;
 
+// The server's own explanation for a failed load (e.g. the experimentalDocgenServer
+// dev-404 body), so the docs block states the real cause instead of guessing.
+let unavailableReason: string | undefined;
+
 async function fetchManifest(): Promise<RawManifest | null> {
   try {
     const response = await fetch(manifestUrl('components.json'));
-    if (!response.ok) return null;
+    if (!response.ok) {
+      unavailableReason = describeManifestUnavailable(await response.text().catch(() => ''));
+      return null;
+    }
+    unavailableReason = undefined;
     return (await response.json()) as RawManifest;
   } catch {
+    unavailableReason = undefined;
     return null;
   }
 }
@@ -129,6 +138,7 @@ export function Oversight() {
           debuggerUrl={manifestUrl('components.html')}
           variant="compact"
           showDebuggerLink={options.debuggerLink ?? DEFAULT_DEBUGGER_LINK}
+          unavailableReason={unavailableReason}
         />
       </Container>
     </ThemedRoot>
