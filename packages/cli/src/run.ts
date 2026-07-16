@@ -1,6 +1,6 @@
 import { analyzeManifest } from 'oversight-core';
 import type { RunOptions } from './config';
-import { formatJson, formatStepSummary, formatStylish } from './format';
+import { formatGithub, formatJson, formatStepSummary, formatStylish } from './format';
 import { ManifestError, readManifest } from './manifest';
 import type { LintSummary } from './types';
 
@@ -42,8 +42,15 @@ export function run(options: RunOptions): RunResult {
   }
 
   const names = new Map<string, string>();
-  for (const component of analysis.result.components) names.set(component.id, component.name);
-  for (const failure of analysis.result.failures) names.set(failure.id, failure.name);
+  const files = new Map<string, string>();
+  for (const component of analysis.result.components) {
+    names.set(component.id, component.name);
+    files.set(component.id, component.storiesFile);
+  }
+  for (const failure of analysis.result.failures) {
+    names.set(failure.id, failure.name);
+    files.set(failure.id, failure.storiesFile);
+  }
 
   const { diagnostics } = analysis;
   const summary: LintSummary = {
@@ -52,9 +59,15 @@ export function run(options: RunOptions): RunResult {
     warnings: diagnostics.filter((d) => d.severity === 'warning').length,
     infos: diagnostics.filter((d) => d.severity === 'info').length,
     names,
+    files,
   };
 
-  const stdout = options.json ? formatJson(summary) : formatStylish(summary, options);
+  const stdout =
+    options.format === 'json'
+      ? formatJson(summary)
+      : options.format === 'github'
+        ? formatGithub(summary)
+        : formatStylish(summary, options);
   const stepSummary = formatStepSummary(summary, options.manifestPath);
 
   // Errors always fail; warnings fail only past the threshold; info never fails.

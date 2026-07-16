@@ -44,10 +44,12 @@ Actions, that is two steps:
 
 ```yaml
 - run: pnpm build-storybook # writes storybook-static/manifests/components.json
-- run: npx oversight --max-warnings 0
+- run: npx oversight --format github --max-warnings 0
 ```
 
-Under Actions it also appends a findings table to the job summary.
+`--format github` emits `::error`/`::warning`/`::notice` annotations so findings show
+inline on the pull request's Files-changed tab; under Actions it also appends a
+findings table to the job summary.
 
 ## Output
 
@@ -59,8 +61,10 @@ Card
 ✖ 5 problems (2 errors, 2 warnings, 1 info)
 ```
 
-Findings are grouped by component. `--json` emits the same findings keyed by
-component id, with a summary count, for programmatic use.
+Findings are grouped by component. `--format json` (alias `--json`) emits the same
+findings keyed by component id, with a summary count, for programmatic use.
+`--format github` emits GitHub Actions annotations, anchored to the stories file
+(findings carry no line numbers), capped at GitHub's ~10 per type per step.
 
 ## Exit codes
 
@@ -75,17 +79,18 @@ lint, and a passing lint does not read as a broken setup.
 
 ## Options
 
-| Option                        | Description                                                          |
-| ----------------------------- | -------------------------------------------------------------------- |
-| `[manifest]`                  | Path to `components.json` (default: the static build output).        |
-| `--expected-extractor <name>` | Extractor the manifest should have used (`react-docgen-typescript`). |
-| `--rule <name>=<severity>`    | Override a rule: `off`, `error`, `warning`, `info`. Repeatable.      |
-| `--max-warnings <n>`          | Fail if warnings exceed `n` (default: no limit).                     |
-| `--config <path>`             | Config file (default: `./oversight.config.json`).                    |
-| `--json`                      | Emit JSON keyed by component id.                                     |
-| `--quiet`                     | Print only errors (does not change the exit code).                   |
-| `-h`, `--help`                | Show help.                                                           |
-| `--version`                   | Print the version.                                                   |
+| Option                          | Description                                                                 |
+| ------------------------------- | --------------------------------------------------------------------------- |
+| `[manifest]`                    | Path to `components.json` (default: the static build output).               |
+| `--expected-extractor <name>`   | Extractor the manifest should have used (`react-docgen-typescript`).        |
+| `--rule <name>=<severity>`      | Override a rule: `off`, `error`, `warning`, `info`. Repeatable.             |
+| `--max-warnings <n>`            | Fail if warnings exceed `n` (default: no limit).                            |
+| `--config <path>`               | Config file (default: `./oversight.config.json`).                           |
+| `--format <text\|json\|github>` | Output format: `text` (default), `json`, or `github` (Actions annotations). |
+| `--json`                        | Alias for `--format json`.                                                  |
+| `--quiet`                       | Print only errors (does not change the exit code).                          |
+| `-h`, `--help`                  | Show help.                                                                  |
+| `--version`                     | Print the version.                                                          |
 
 The rules, their default severities, and what each one fires on are documented in
 the addon's [Diagnostics table](../storybook-addon-oversight/README.md#diagnostics).

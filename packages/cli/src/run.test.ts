@@ -21,7 +21,7 @@ function fixture(manifest: unknown): string {
 }
 
 function options(over: Partial<RunOptions> & { manifestPath: string }): RunOptions {
-  return { lint: {}, maxWarnings: Infinity, json: false, quiet: false, color: false, ...over };
+  return { lint: {}, maxWarnings: Infinity, format: 'text', quiet: false, color: false, ...over };
 }
 
 const CLEAN: RawManifest = {
@@ -150,13 +150,21 @@ describe('run — rule overrides and output', () => {
   });
 
   it('emits JSON keyed by component id with a summary', () => {
-    const result = run(options({ manifestPath: fixture(WITH_ERROR), json: true }));
+    const result = run(options({ manifestPath: fixture(WITH_ERROR), format: 'json' }));
     const parsed = JSON.parse(result.stdout) as {
       summary: { errors: number; warnings: number; infos: number };
       components: Record<string, { rule: string; severity: string }[]>;
     };
     expect(parsed.summary).toEqual({ errors: 1, warnings: 1, infos: 0 });
     expect(parsed.components['ui-input'].map((d) => d.rule)).toContain('required-prop-undocumented');
+  });
+
+  it('emits GitHub annotations anchored to the stories file under format: github', () => {
+    const result = run(options({ manifestPath: fixture(WITH_ERROR), format: 'github' }));
+    expect(result.stdout).toMatch(/^::error .*file=src\/Input\.stories\.tsx::/m);
+    expect(result.stdout).toContain('title=oversight/required-prop-undocumented');
+    // The readable table still reaches the job summary.
+    expect(result.stepSummary).toMatch(/Oversight manifest lint/);
   });
 
   it('always provides a step summary regardless of stdout format', () => {
