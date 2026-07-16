@@ -51,7 +51,7 @@ function ManagerLink({ label, target }: { label: string; target: string }) {
 }
 
 export function Panel({ active }: PanelProps) {
-  const { status, report, debuggerUrl, showDebuggerLink } = useOversightReport();
+  const { status, report, debuggerUrl, showDebuggerLink, unavailableReason } = useOversightReport();
   return (
     <AddonPanel active={active ?? false}>
       <ReportView
@@ -61,6 +61,7 @@ export function Panel({ active }: PanelProps) {
         variant="full"
         LinkComponent={ManagerLink}
         showDebuggerLink={showDebuggerLink}
+        unavailableReason={unavailableReason}
       />
     </AddonPanel>
   );

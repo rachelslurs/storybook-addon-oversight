@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { addons, useStorybookState } from 'storybook/manager-api';
-import { analyzeManifest, resolveComponent } from './core';
+import { analyzeManifest, describeManifestUnavailable, resolveComponent } from './core';
 import type { ComponentReport, ManifestAnalysis, RawManifest } from './core';
 import { DEFAULT_DEBUGGER_LINK } from './config';
 import type { OversightConfig } from './config';
@@ -14,6 +14,8 @@ export type ManagerReport = {
   debuggerUrl: string;
   /** Whether to render the debugger footer link (`debuggerLink` config). */
   showDebuggerLink: boolean;
+  /** The real reason the manifest didn't load, when the server gave one. */
+  unavailableReason?: string;
 };
 
 /**
@@ -33,12 +35,23 @@ function manifestsBaseUrl(): string {
 // `.storybook/manager.ts` calls `addons.setConfig`.
 let manifestPromise: Promise<RawManifest | null> | undefined;
 
+// The server's own explanation for a failed load (e.g. the experimentalDocgenServer
+// dev-404 body), surfaced in the `unavailable` state so the panel states the real
+// cause instead of guessing. Set on every fetch; read at render time — by the time
+// status is `unavailable`, the fetch that set it has resolved.
+let unavailableReason: string | undefined;
+
 async function fetchManifest(): Promise<RawManifest | null> {
   try {
     const response = await fetch(`${manifestsBaseUrl()}components.json`);
-    if (!response.ok) return null;
+    if (!response.ok) {
+      unavailableReason = describeManifestUnavailable(await response.text().catch(() => ''));
+      return null;
+    }
+    unavailableReason = undefined;
     return (await response.json()) as RawManifest;
   } catch {
+    unavailableReason = undefined;
     return null;
   }
 }
@@ -87,6 +100,9 @@ export function useOversightReport(): ManagerReport {
   const base = {
     debuggerUrl: `${manifestsBaseUrl()}components.html`,
     showDebuggerLink: config.debuggerLink ?? DEFAULT_DEBUGGER_LINK,
+    // Read at render; meaningful only in the `unavailable` state (by then the
+    // failing fetch has set it).
+    unavailableReason,
   };
 
   useEffect(() => {

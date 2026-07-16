@@ -25,6 +25,9 @@ export type ReportViewProps = {
   /** Render the "manifest debugger" footer link. Defaults to `true`; a
    *  consumer hides it everywhere via `debuggerLink: false`. */
   showDebuggerLink?: boolean;
+  /** The real reason the manifest didn't load (e.g. from the server's 404 body),
+   *  shown in the `unavailable` state instead of the generic addon-mcp hint. */
+  unavailableReason?: string;
 };
 
 const Section = styled.section(({ theme }) => ({
@@ -295,6 +298,7 @@ export function ReportView({
   variant = 'full',
   LinkComponent,
   showDebuggerLink = true,
+  unavailableReason,
 }: ReportViewProps) {
   if (status === 'loading') {
     return <Placeholder>Loading the components manifest…</Placeholder>;
@@ -308,10 +312,14 @@ export function ReportView({
     );
   }
   if (status === 'unavailable') {
+    // Prefer the real reason (e.g. the server's 404 body naming
+    // experimentalDocgenServer). Only guess "enable @storybook/addon-mcp" when
+    // the server gave no explanation — never assert a cause we haven't verified.
     return (
       <Placeholder>
-        Components manifest unavailable — /manifests/components.json did not load. Enable the manifest feature (e.g.
-        @storybook/addon-mcp).
+        {unavailableReason
+          ? `Components manifest unavailable — ${unavailableReason}`
+          : 'Components manifest unavailable — /manifests/components.json did not load. Enable the manifest feature (e.g. @storybook/addon-mcp).'}
       </Placeholder>
     );
   }

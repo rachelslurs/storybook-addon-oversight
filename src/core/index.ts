@@ -1,6 +1,7 @@
 export { detectRepoRoot, normalizeManifest } from './normalize';
 export { lint } from './lint';
 export type { LintOptions } from './lint';
+export { describeManifestUnavailable } from './manifestStatus';
 export { parsePathTargetId, pathLinkPattern } from './pathLinks';
 export { analyzeManifest, buildReport, resolveComponent } from './report';
 export type { ComponentReport, ManifestAnalysis } from './report';
