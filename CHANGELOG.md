@@ -1,3 +1,16 @@
+# v0.1.2 (Thu Jul 16 2026)
+
+#### 🐛 Bug Fix
+
+- fix: show an error state instead of hanging when the manifest can't be parsed [#14](https://github.com/rachelslurs/storybook-addon-oversight/pull/14) ([@rachelslurs](https://github.com/rachelslurs))
+- docs: troubleshoot docgen-missing + add issue templates [#10](https://github.com/rachelslurs/storybook-addon-oversight/pull/10) ([@rachelslurs](https://github.com/rachelslurs))
+
+#### Authors: 1
+
+- rachel cantor ([@rachelslurs](https://github.com/rachelslurs))
+
+---
+
 # v0.1.1 (Wed Jul 15 2026)
 
 #### 🐛 Bug Fix
