@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import type { ComponentType } from 'react';
-import { Badge, Placeholder } from 'storybook/internal/components';
+import { Badge } from 'storybook/internal/components';
 import { styled } from 'storybook/theming';
 import type { ComponentReport, Diagnostic, DiagnosticSeverity } from '../core';
 import { parseInline, splitParagraphs, storybookPathId } from './markdown';
@@ -110,6 +110,22 @@ const Note = styled.div(({ theme }) => ({
   color: theme.textMutedColor,
   fontSize: theme.typography.size.s1,
   marginBottom: 8,
+}));
+
+// A non-report state (loading / error / unavailable / no story / no entry).
+// Left-aligned and padded like the panel's other content, rather than a
+// centered placeholder, so a real message reads as intentional panel copy.
+const StatusMessage = styled.div(({ theme }) => ({
+  padding: '12px 16px',
+  fontSize: theme.typography.size.s2,
+  lineHeight: 1.5,
+  color: theme.textMutedColor,
+}));
+
+const StatusHeading = styled.div(({ theme }) => ({
+  fontWeight: theme.typography.weight.bold,
+  color: theme.color.defaultText,
+  marginBottom: 4,
 }));
 
 /** A severity-badged list of diagnostics, errors first. Shared by the
@@ -301,33 +317,34 @@ export function ReportView({
   unavailableReason,
 }: ReportViewProps) {
   if (status === 'loading') {
-    return <Placeholder>Loading the components manifest…</Placeholder>;
+    return <StatusMessage>Loading the components manifest…</StatusMessage>;
   }
   if (status === 'error') {
     return (
-      <Placeholder>
-        Components manifest loaded but could not be parsed — it may be an unsupported or malformed format. See the
+      <StatusMessage>
+        <StatusHeading>Manifest could not be parsed</StatusHeading>
+        The components manifest loaded but its format could not be parsed. It may be unsupported or malformed. See the
         browser console for details.
-      </Placeholder>
+      </StatusMessage>
     );
   }
   if (status === 'unavailable') {
     // Prefer the real reason (e.g. the server's 404 body naming
     // experimentalDocgenServer). Only guess "enable @storybook/addon-mcp" when
-    // the server gave no explanation — never assert a cause we haven't verified.
+    // the server gave no explanation, so we never assert a cause we haven't verified.
     return (
-      <Placeholder>
-        {unavailableReason
-          ? `Components manifest unavailable — ${unavailableReason}`
-          : 'Components manifest unavailable — /manifests/components.json did not load. Enable the manifest feature (e.g. @storybook/addon-mcp).'}
-      </Placeholder>
+      <StatusMessage>
+        <StatusHeading>Components manifest unavailable</StatusHeading>
+        {unavailableReason ??
+          '/manifests/components.json did not load. Enable the manifest feature (e.g. @storybook/addon-mcp).'}
+      </StatusMessage>
     );
   }
   if (status === 'no-story') {
-    return <Placeholder>Select a story to see its coverage.</Placeholder>;
+    return <StatusMessage>Select a story to see its coverage.</StatusMessage>;
   }
   if (status === 'no-entry' || !report) {
-    return <Placeholder>No manifest entry for this component.</Placeholder>;
+    return <StatusMessage>No manifest entry for this component.</StatusMessage>;
   }
 
   const { component, failure, storyFailures, diagnostics, manifestDiagnostics } = report;
