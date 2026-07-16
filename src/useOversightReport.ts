@@ -80,7 +80,7 @@ function loadAnalysis(): Promise<ManifestAnalysis | null> {
 void loadManifest();
 
 export function useOversightReport(): ManagerReport {
-  const [analysis, setAnalysis] = useState<ManifestAnalysis | null | 'loading'>('loading');
+  const [analysis, setAnalysis] = useState<ManifestAnalysis | null | 'loading' | 'error'>('loading');
   // Display config is read synchronously (unlike `rules`/`expectedExtractor`,
   // which are baked into the module-cached analysis). `getConfig()` is cheap.
   const config = (addons.getConfig()[ADDON_ID] ?? {}) as OversightConfig;
@@ -91,9 +91,19 @@ export function useOversightReport(): ManagerReport {
 
   useEffect(() => {
     let cancelled = false;
-    loadAnalysis().then((loaded) => {
-      if (!cancelled) setAnalysis(loaded);
-    });
+    loadAnalysis().then(
+      (loaded) => {
+        if (!cancelled) setAnalysis(loaded);
+      },
+      (err) => {
+        // A malformed/unsupported manifest (normalize/analyze throws) must surface
+        // as an error state, never an infinite spinner — the same principle the
+        // 404 → `unavailable` path already honors. Log the underlying throw, since
+        // handling it here means it is no longer an uncaught exception.
+        console.error('[storybook-addon-oversight] could not analyze the components manifest', err);
+        if (!cancelled) setAnalysis('error');
+      },
+    );
     return () => {
       cancelled = true;
     };
@@ -103,6 +113,7 @@ export function useOversightReport(): ManagerReport {
   const { storyId } = useStorybookState();
 
   if (analysis === 'loading') return { status: 'loading', ...base };
+  if (analysis === 'error') return { status: 'error', ...base };
   if (analysis === null) return { status: 'unavailable', ...base };
   // Manifest is loaded but Storybook hasn't selected a story yet (initial mount
   // / root URL) — distinct from a still-loading manifest, so don't show a spinner.
