@@ -8,4 +8,6 @@ export type LintSummary = {
   infos: number;
   /** componentId -> display name, for group headers and the summary table. */
   names: Map<string, string>;
+  /** componentId -> stories file (repo-relative), the anchor for GitHub annotations. */
+  files: Map<string, string>;
 };

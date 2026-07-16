@@ -7,12 +7,17 @@ import type { DiagnosticRule, LintOptions, RuleSetting } from 'oversight-core';
 /** Where a plain `storybook build` writes the manifest. */
 export const DEFAULT_MANIFEST_PATH = 'storybook-static/manifests/components.json';
 
+/** `text` = stylish console; `json` = machine-readable; `github` = Actions annotations. */
+export type OutputFormat = 'text' | 'json' | 'github';
+
+const VALID_FORMATS = new Set<OutputFormat>(['text', 'json', 'github']);
+
 export type RunOptions = {
   manifestPath: string;
   lint: LintOptions;
   /** Warnings past this count fail the run. `Infinity` = no limit. */
   maxWarnings: number;
-  json: boolean;
+  format: OutputFormat;
   /** Show only errors in console output (counts and exit code are unaffected). */
   quiet: boolean;
   color: boolean;
@@ -65,7 +70,9 @@ Options:
                                Repeatable.
   --max-warnings <n>           Fail if warnings exceed n (default: no limit).
   --config <path>              Config file (default: ./oversight.config.json).
-  --json                       Emit JSON keyed by component id.
+  --format <fmt>               Output: text (default), json, or github
+                               (::error/::warning annotations for GitHub Actions).
+  --json                       Alias for --format json.
   --quiet                      Print only errors (does not change the exit code).
   -h, --help                   Show this help.
   --version                    Print the version.
@@ -129,6 +136,7 @@ export function buildConfig(argv: string[], ctx: Context): ConfigResult {
         rule: { type: 'string', multiple: true },
         'max-warnings': { type: 'string' },
         config: { type: 'string' },
+        format: { type: 'string' },
         json: { type: 'boolean', default: false },
         quiet: { type: 'boolean', default: false },
         help: { type: 'boolean', short: 'h', default: false },
@@ -171,13 +179,20 @@ export function buildConfig(argv: string[], ctx: Context): ConfigResult {
 
   const color = resolveColor(ctx);
 
+  const formatRaw = values.format as string | undefined;
+  if (formatRaw !== undefined && !VALID_FORMATS.has(formatRaw as OutputFormat)) {
+    return { kind: 'error', message: `--format expects text|json|github, got "${formatRaw}"` };
+  }
+  // Explicit --format wins; --json is sugar for --format json; default is text.
+  const format: OutputFormat = (formatRaw as OutputFormat | undefined) ?? (values.json ? 'json' : 'text');
+
   return {
     kind: 'run',
     options: {
       manifestPath: positionals[0] ?? file.manifest ?? DEFAULT_MANIFEST_PATH,
       lint,
       maxWarnings,
-      json: Boolean(values.json),
+      format,
       quiet: Boolean(values.quiet),
       color,
     },

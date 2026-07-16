@@ -119,3 +119,61 @@ export function formatStepSummary(summary: LintSummary, manifestPath: string): s
   }
   return lines.join('\n');
 }
+
+const GITHUB_COMMAND: Record<DiagnosticSeverity, 'error' | 'warning' | 'notice'> = {
+  error: 'error',
+  warning: 'warning',
+  info: 'notice',
+};
+
+/** GitHub renders at most ~10 annotations of each type per step. */
+const MAX_ANNOTATIONS_PER_TYPE = 10;
+
+/** Escape a workflow-command message payload. */
+function encodeData(value: string): string {
+  return value.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+}
+
+/** Escape a workflow-command property value (also `:` and `,`). */
+function encodeProperty(value: string): string {
+  return encodeData(value).replace(/:/g, '%3A').replace(/,/g, '%2C');
+}
+
+/**
+ * GitHub Actions workflow-command annotations, one per finding, so findings show
+ * inline on the pull request's Files-changed tab. Anchored to the stories file
+ * (the manifest carries no line numbers, so annotations land at the top of it).
+ * Manifest-level findings get a file-less, job-level annotation. Emission is
+ * capped per type to match what GitHub renders, with a trailing note if truncated.
+ */
+export function formatGithub(summary: LintSummary): string {
+  const emitted: Record<string, number> = { error: 0, warning: 0, notice: 0 };
+  const dropped: Record<string, number> = { error: 0, warning: 0, notice: 0 };
+  const lines: string[] = [];
+
+  for (const d of summary.diagnostics) {
+    const command = GITHUB_COMMAND[d.severity];
+    if (emitted[command] >= MAX_ANNOTATIONS_PER_TYPE) {
+      dropped[command] += 1;
+      continue;
+    }
+    emitted[command] += 1;
+
+    const properties = [`title=${encodeProperty(`oversight/${d.rule}`)}`];
+    const anchor = d.componentId ? summary.files.get(d.componentId)?.replace(/^\.\//, '') : undefined;
+    if (anchor) properties.push(`file=${encodeProperty(anchor)}`);
+
+    lines.push(`::${command} ${properties.join(',')}::${encodeData(withProps(d.message, d.props))}`);
+  }
+
+  for (const command of ['error', 'warning', 'notice'] as const) {
+    if (dropped[command] > 0) {
+      lines.push(
+        `${dropped[command]} more ${command} annotation${dropped[command] === 1 ? '' : 's'} omitted ` +
+          `(GitHub renders at most ${MAX_ANNOTATIONS_PER_TYPE} per type per step); see the job summary.`,
+      );
+    }
+  }
+
+  return lines.join('\n');
+}

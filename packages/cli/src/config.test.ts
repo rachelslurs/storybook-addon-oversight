@@ -63,6 +63,17 @@ describe('buildConfig', () => {
     expect(runConfig(['--expected-extractor', 'react-docgen']).lint.expectedExtractor).toBe('react-docgen');
   });
 
+  it('resolves the output format: text default, --json aliases json, --format wins', () => {
+    expect(runConfig([]).format).toBe('text');
+    expect(runConfig(['--json']).format).toBe('json');
+    expect(runConfig(['--format', 'github']).format).toBe('github');
+    expect(runConfig(['--format', 'json', '--json']).format).toBe('json');
+  });
+
+  it('rejects an unknown --format', () => {
+    expect(buildConfig(['--format', 'yaml'], ctx())).toMatchObject({ kind: 'error' });
+  });
+
   it('reports help and version as their own kinds', () => {
     expect(buildConfig(['--help'], ctx()).kind).toBe('help');
     expect(buildConfig(['-h'], ctx()).kind).toBe('help');
