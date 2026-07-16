@@ -9,7 +9,7 @@ import { parseInline, splitParagraphs, storybookPathId } from './markdown';
  *  navigates via `api.selectStory`. Only needed by the "full" variant. */
 export type LinkComponent = ComponentType<{ label: string; target: string }>;
 
-export type ReportViewStatus = 'loading' | 'unavailable' | 'no-story' | 'no-entry' | 'ready';
+export type ReportViewStatus = 'loading' | 'error' | 'unavailable' | 'no-story' | 'no-entry' | 'ready';
 
 /** "full" renders the description as markdown (the manager panel — no other
  *  description nearby). "compact" shows a documented/missing verdict (the docs
@@ -298,6 +298,14 @@ export function ReportView({
 }: ReportViewProps) {
   if (status === 'loading') {
     return <Placeholder>Loading the components manifest…</Placeholder>;
+  }
+  if (status === 'error') {
+    return (
+      <Placeholder>
+        Components manifest loaded but could not be parsed — it may be an unsupported or malformed format. See the
+        browser console for details.
+      </Placeholder>
+    );
   }
   if (status === 'unavailable') {
     return (

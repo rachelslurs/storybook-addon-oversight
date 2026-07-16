@@ -104,8 +104,17 @@ export function Oversight() {
   } else if (componentId === undefined) {
     status = 'no-entry';
   } else {
-    report = buildReport(manifest, componentId, options);
-    status = report.found ? 'ready' : 'no-entry';
+    // `buildReport` runs normalize/analyze synchronously in render, so a
+    // malformed/unsupported manifest would throw here and crash the Docs page.
+    // Degrade to the error state instead — the same guarantee the manager panel
+    // makes (never hang or crash on a bad manifest).
+    try {
+      report = buildReport(manifest, componentId, options);
+      status = report.found ? 'ready' : 'no-entry';
+    } catch (err) {
+      console.error('[storybook-addon-oversight] could not analyze the components manifest', err);
+      status = 'error';
+    }
   }
 
   return (
