@@ -26,13 +26,10 @@ This Storybook **dogfoods the addon**. `@storybook/addon-mcp` serves the
 components manifest, and **Oversight** lints it, flagging the documentation an
 AI agent can and can't read, per component, while you work.
 
-Everything below is a real, live diagnosis: `@storybook/addon-mcp` generates the
-manifest, Oversight reads it, and the panel and block react to what each
-component actually documents.
+Everything below is a real, live diagnosis: the panel and block react to what
+each component actually documents.
 
 ## Two places to look
-
-The same diagnostics appear in two independent surfaces.
 
 ### 1 · The panel
 
@@ -118,9 +115,9 @@ per-component findings:
   style={{ width: '100%', borderRadius: 8, border: '1px solid #e5e7eb', margin: '1rem 0' }}
 />
 
-This demo ships on `react-docgen-typescript`, so drift can't fire live. The docs
-are intact. The still above is a build with the shallow extractor; in your
-project the warning appears the moment the manifest drifts.
+This demo ships on `react-docgen-typescript`, so drift can't fire live. The still
+above is a build with the shallow extractor; in your project the warning appears
+the moment the manifest drifts.
 
 ## Not shown here
 

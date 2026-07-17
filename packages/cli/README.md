@@ -73,8 +73,7 @@ findings keyed by component id, with a summary count, for programmatic use.
 | `1`  | An error-severity rule fired, or warnings exceeded `--max-warnings`.    |
 | `2`  | Could not run: manifest missing, unparseable, or an unsupported format. |
 
-Exit `2` is kept distinct from `1` so a broken setup does not read as a passing
-lint, and a passing lint does not read as a broken setup.
+Exit `2` is distinct from `1` so a broken setup does not read as a passing lint.
 
 ## Options
 
