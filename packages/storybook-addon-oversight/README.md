@@ -93,8 +93,6 @@ import { Oversight } from 'storybook-addon-oversight/blocks';
 <Oversight />
 ```
 
-The Docs block and manager panel share the components-manifest prerequisite.
-
 ## What Oversight checks
 
 The manifest Oversight lints is the _upstream_ artifact: Storybook's MCP
@@ -116,8 +114,7 @@ The same diagnostics appear in two places, independently:
   component's **story** view (Storybook hides addon panels on Docs pages).
   Registering the addon in `.storybook/main.ts` enables it.
 - **Docs-page block**: the same coverage rendered inline on Docs pages. It is an
-  optional step in the [installation](#optional-enable-the-docs-page-block) and
-  can be enabled globally or on individual component MDX pages.
+  optional step in the [installation](#optional-enable-the-docs-page-block).
 
 ## In CI
 
@@ -274,10 +271,8 @@ pnpm storybook  # open the demo at http://localhost:6006
 
 ## Development
 
-This package lives in the [Oversight monorepo](../../README.md). The diagnostic
-logic is a separate `oversight-core` package (pure functions, zero Storybook
-imports); the panel and Docs block are thin renderers over it, and `oversight-lint`
-runs the same rules. Build and test from the repo root:
+This package lives in the [Oversight monorepo](../../README.md). Build and test
+from the repo root:
 
 ```bash
 pnpm install
